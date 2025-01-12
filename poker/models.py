@@ -31,8 +31,12 @@ class Bot(models.Model):
 
 
 class Match(models.Model):
+    game_id = models.AutoField(primary_key=True)
     bot1 = models.ForeignKey(Bot, related_name='matches_as_bot1', on_delete=models.CASCADE)
     bot2 = models.ForeignKey(Bot, related_name='matches_as_bot2', on_delete=models.CASCADE)
     result = models.CharField(max_length=50, blank=True, null=True)
     chips_exchanged = models.IntegerField(default=0)
+    match_number = models.PositiveIntegerField()
     played_at = models.DateTimeField(auto_now_add=True)
+    replay_data = models.JSONField()
+

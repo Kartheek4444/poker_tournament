@@ -16,29 +16,31 @@ def play_match(bot1_path, bot2_path, bot1, bot2):
     bot1_instance = load_bot(bot1_path)
     bot2_instance = load_bot(bot2_path)
 
-    config = setup_config(max_round=10, initial_stack=1000, small_blind_amount=10)
-    config.register_player(name="bot1", algorithm=bot1_instance)
-    config.register_player(name="bot2", algorithm=bot2_instance)
+    config = setup_config(max_round=1, initial_stack=1000, small_blind_amount=50)
+    config.register_player(name=bot1.name, algorithm=bot1_instance)
+    config.register_player(name=bot2.name, algorithm=bot2_instance)
 
     result = start_poker(config, verbose=0)
     bot1_stack = result["players"][0]["stack"]
     bot2_stack = result["players"][1]["stack"]
 
     # Determine winner and chips exchanged
-    chips_exchanged = abs(bot1_stack - bot2_stack)
+    chips_exchanged = abs(bot1_stack - bot2_stack)/2
     if bot1_stack > bot2_stack:
         bot1.chips += chips_exchanged
         bot2.chips -= chips_exchanged
         winner = bot1.name
-    else:
+    elif bot2_stack > bot1_stack:
         bot1.chips -= chips_exchanged
         bot2.chips += chips_exchanged
         winner = bot2.name
+    else:
+        winner = None
 
     bot1.save()
     bot2.save()
 
-    return winner, chips_exchanged
+    return winner, chips_exchanged, replay_data
 
 
 
